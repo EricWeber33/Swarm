@@ -21,5 +21,4 @@ class Player:
     # returns true if player is colliding with an enemy e
     def collide(self, e):
         enemy_pos = e.get_position()
-        #print(range(enemy_pos[0]-5, enemy_pos[0]+5) + " " + range(enemy_pos[1]-5, enemy_pos[1]+5) + " " + self.x_pos + ", " + self.y_pos)
         return self.x_pos in range(enemy_pos[0]-5, enemy_pos[0]+5) and self.y_pos in range(enemy_pos[1]-5, enemy_pos[1]+5)
