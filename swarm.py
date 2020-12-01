@@ -3,7 +3,6 @@ import random
 import enemy
 import player
 
-
 window_width = 800
 window_height = 600
 
@@ -15,11 +14,17 @@ def main():
     clock = pygame.time.Clock()
     surface = pygame.display.get_surface()
     SPAWN = pygame.event.custom_type()
-    pygame.time.set_timer(SPAWN, 3000)  # set timer
+    pygame.time.set_timer(SPAWN, 2000)  # set timer
     game_over = False  # boolean for whether player has lost
 
     # seed random
     random.seed()
+
+    # vars for score display
+    score = 0
+    SCORE = pygame.event.custom_type()
+    pygame.time.set_timer(SCORE, 1000)  # set timer for incrementing score
+    myfont = pygame.font.SysFont("monospace", 25)
 
     # vars for a nest
     nest_radius = 25
@@ -42,7 +47,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 # esc key event
                 if event.key == pygame.K_ESCAPE:
-                    print("uUser exited")
+                    print("User exited")
                     game_over = True
 
             # game events
@@ -65,7 +70,9 @@ def main():
                     else:
                         e = enemy.Enemy((window_width - nest_offset, window_height - nest_offset), surface)
                         enemies.append(e)
-
+            # increment score event
+            if event.type == SCORE:
+                score += 1
         window.fill((0, 0, 0))  # fill window
         # draw all nests
         pygame.draw.circle(surface, nest_color, (nest_offset, nest_offset), nest_radius)
@@ -86,9 +93,29 @@ def main():
             if p.collide(e):
                 game_over = True
 
+        # draw score
+        score_label = myfont.render("Score: " + str(score), True, (255, 255, 255))
+        surface.blit(score_label, (window_width // 2 - 50, 10))
+
         pygame.display.update()  # updates window
         clock.tick(60)
-    return 0
+
+    # allow the user to view the game state after losing
+    # until they quit
+    exit_game = False
+    while not exit_game:
+        events = pygame.event.get()
+        for event in events:
+            # quit event
+            if event.type == pygame.QUIT:
+                print("User exited")
+                exit_game = True
+            # key events
+            if event.type == pygame.KEYDOWN:
+                # esc key event
+                if event.key == pygame.K_ESCAPE:
+                    print("User exited")
+                    exit_game = True
 
 
 if __name__ == '__main__':
